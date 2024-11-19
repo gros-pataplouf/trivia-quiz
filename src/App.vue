@@ -1,31 +1,26 @@
 <template>
-  <div id="app">
-    <QuizHeader/>
-    <QuestionBox />
-  </div>
+  <v-app>
+    <v-main>
+      <QuizHeader />
+      <QuestionBox />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import QuizHeader from './components/QuizHeader.vue'
-import QuestionBox from './components/QuestionBox.vue'
-
+import QuizHeader from './components/QuizHeader';
+import QuestionBox from './components/QuestionBox';
 
 export default {
   name: 'App',
+
   components: {
     QuizHeader,
-    QuestionBox
-  }
-}
-</script>
+    QuestionBox,
+  },
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  data: () => ({
+    //
+  }),
+};
+</script>

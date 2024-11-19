@@ -1,8 +1,7 @@
 <template>
 
     <h2>
-
-        Question Box!
+       Question Box!
     </h2>
 
 </template>
