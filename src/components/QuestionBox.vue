@@ -1,20 +1,23 @@
 <template>
     <v-container>
         <v-card class="mx-auto" max-width="600" hover>
-                <v-card-title>
-                    {{ currentQuestion.question }}
-                </v-card-title>
-                <v-list-item :class="{selected: index === selectedIndex, answer: true}" @click="selectAnswer(index)" v-ripple v-for="(answer, index) in answers" :key="index">{{ answer }}</v-list-item>
+            <v-card-title>
+                {{ currentQuestion.question }}
+            </v-card-title>
+            <v-list-item :class="{ selected: index === selectedIndex, answer: true, correct: submitted && correctIndex === index, incorrect: submitted && selectedIndex === index && correctIndex !== index }" @click="selectAnswer(index)"
+                v-ripple v-for="(answer, index) in shuffledAnswers" :key="index">{{ answer }}</v-list-item>
             <v-container>
-            <v-row>
-                <v-col align="start">
-                    <v-btn color="primary">Submit</v-btn>
-                </v-col>
-                <v-col align="end">
-                    <v-btn @click="increment" color="success">Next</v-btn>
-                </v-col>
-            </v-row>
-        </v-container>
+                <v-row>
+                    <v-col align="start">
+                        <v-btn color="primary" @click="checkGuess" :disabled="submitted === true || selectedIndex === null">
+                            Submit
+                        </v-btn>
+                    </v-col>
+                    <v-col align="end">
+                        <v-btn @click="increment" color="success" :disabled="!submitted">Next</v-btn>
+                    </v-col>
+                </v-row>
+            </v-container>
         </v-card>
     </v-container>
 </template>
@@ -25,33 +28,51 @@ import _ from "lodash";
 export default {
     props: {
         currentQuestion: Object,
-        increment: Function
+        increment: Function,
+        updateScores: Function
     },
     data() {
         return {
-            selectedIndex: null
+            selectedIndex: null,
+            correctIndex: null,
+            shuffledAnswers: [],
+            submitted: false
         }
     },
     computed: {
-        answers(){
+        answers() {
             return [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer];
         }
     },
     watch: {
-        currentQuestion() {
-            this.selectedIndex = null;
-            this.shuffleAnswers();
-
+        // currentQuestion() { // example of a watch function
+        //     this.selectedIndex = null;
+        //     this.shuffleAnswers();
+        // },
+        currentQuestion: {
+            immediate: true,
+            handler() {
+                this.selectedIndex = null;
+                this.submitted = false;
+                this.shuffleAnswers();
+            }
         }
-
     },
     methods: {
-        selectAnswer: function(index) {
+        selectAnswer: function (index) {
+            if (this.submitted) {
+                return;
+            }
             this.selectedIndex = index;
         },
-        shuffleAnswers: function() {
+        shuffleAnswers: function () {
             let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer];
-            return _.shuffle(answers);
+            this.shuffledAnswers = [..._.shuffle(answers)];
+            this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer);
+        },
+        checkGuess: function () {
+            this.updateScores(this.selectedIndex === this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer));
+            this.submitted = true;
         }
     }
 }
@@ -60,18 +81,18 @@ export default {
 
 <style scoped>
 .selected {
-    border: 1px solid #0091EA;
+    background-color: #88d1ff;
 }
+
 .correct {
-    background-color: #008000;
+    background-color: #77da77;
 }
 
 .incorrect {
-    background-color: #ff0000;
+    background-color: #f19a9a;
 }
 
 .answer:hover {
     cursor: pointer;
 }
-
 </style>

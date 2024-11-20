@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-main>
-      <QuizHeader :counter="counter"/>
-      <QuestionBox v-if="questions.length" :currentQuestion="questions[counter]" :increment="increment" />
+      <QuizHeader :correctGuesses="correctGuesses" :totalGuesses="totalGuesses"/>
+      <QuestionBox v-if="questions.length" :currentQuestion="questions[counter]" :increment="increment" :updateScores="updateScores"/>
     </v-main>
   </v-app>
 </template>
@@ -32,12 +32,20 @@ export default {
   data: () => ({
     questions: [],
     counter: 0,
-    currentQuestion: {}
-  
+    currentQuestion: {},
+    correctGuesses: 0,
+    totalGuesses: 0
+ 
   }),
   methods: {
     increment() {
       this.counter++;
+    },
+    updateScores(correctGuess) {
+      if (correctGuess) {
+        this.correctGuesses++;
+      }
+      this.totalGuesses++;
     }
   }
 };

@@ -5,7 +5,7 @@
                 <v-app-bar-title>Quiz Time</v-app-bar-title>
             </v-col>
             <v-col>
-                <p>Counter: {{ counter + 1 }}/10</p>
+                <p>Counter: {{ correctGuesses }}/ {{ totalGuesses }}</p>
             </v-col>
         </v-app-bar>
     </v-container>
@@ -13,7 +13,8 @@
 <script>
 export default {
     props: {
-        counter: Number
+        correctGuesses: Number,
+        totalGuesses: Number
     }
 }
 </script>
