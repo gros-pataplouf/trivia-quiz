@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-main>
-      <QuizHeader />
-      <QuestionBox />
+      <QuizHeader :counter="counter"/>
+      <QuestionBox v-if="questions.length" :currentQuestion="questions[counter]" :increment="increment" />
     </v-main>
   </v-app>
 </template>
@@ -18,9 +18,27 @@ export default {
     QuizHeader,
     QuestionBox,
   },
+  mounted: function() {
+    console.log(this.currentQuestion)
+    fetch('https://opentdb.com/api.php?amount=10&category=22&type=multiple', {
+      method: 'get'
+    })
+    .then(response => response.json())
+    .then(jsonData => this.questions = jsonData.results)
+    .catch(e => console.error(e))
+
+  },
 
   data: () => ({
-    //
+    questions: [],
+    counter: 0,
+    currentQuestion: {}
+  
   }),
+  methods: {
+    increment() {
+      this.counter++;
+    }
+  }
 };
 </script>
